@@ -60,8 +60,7 @@ spawn_random_enemies(3)
 
 def go_to_next_street():
     global enemies
-    player.x = 0
-    player.y = 0
+    player.x = -(camera.fov * camera.aspect_ratio / 2 - player.scale_x)
     for enemy in enemies:
         destroy(enemy)
     enemies = []
