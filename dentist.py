@@ -3,55 +3,65 @@ from copy import copy
 
 
 
-Text.default_resolution *= 4
-Text.default_font = 'monogram_extended.ttf'
-Text.size *= 2
-
-
 class JawMinigame(Entity):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
+        self.ui = Entity(parent=camera.ui)
+        self.editor_camera = EditorCamera(parent=self, rotate_around_mouse_hit=False, y=1)
+        self.editor_camera.rotation_x = 20
         camera.fov = 60
-        self.tooth_slot_model = Entity(model=Cylinder(height=.1), enabled=False)
-        self.tooth_model = Entity(model=Prismatoid(base_shape=Quad(), thicknesses=[(1,1), (.7,.7)]), enabled=False)
-        self.jaw_model = Entity(model='gum', enabled=False)
+        self.bg = Sky(
+            parent=self,
+            texture='brick',
+            color=color.lime,
+            # texture_scale=(64,32)
+            )
+        self.bg.texture.filtering = None
+        self.animate_background_color()
+        # self.floor = Entity(parent=self, model='plane', y=-8, scale=100, texture='white_cube', texture_scale=(64,64))
+        # self.bg = Entity(model='quad', z=100, scale=1000, color=color.black)
+        # self.bg.look_at(camera, 'back')
+
+        self.tooth_slot_model = Entity(parent=self, model=Cylinder(height=.2), enabled=False)
+        self.tooth_model = Entity(parent=self, model=Prismatoid(base_shape=Quad(), thicknesses=[(1,1), (.7,.7)]), enabled=False)
+        self.jaw_model = Entity(parent=self, model='gum', enabled=False)
 
         self.jaw = self.generate_jaw()
         self.randomize_jaw(self.jaw)
         self.finished_jaw = self.generate_jaw()
         self.finished_jaw.x = -20
+        self.finished_jaw.enabled = False
 
         mouse.visible = False
-        self.cursor = Cursor(scale=.025)
+        self.cursor = Cursor(parent=self.ui, scale=.025)
         self.cursor.text_entity = Text(parent=self.cursor, text='tool_name', world_scale=25, y=1, z=-1)
 
-        self.tools = [
-            'place_tooth',
-            # 'syringe',
-            'hammer'
-            ]
-        self.tool = 'place_tooth'
-
         self.time = 30
-        self.timer = Text('60.00', origin=(0,.5), y=.5, scale=2)
+        self.timer = Text(parent=self.ui, text='60.00', origin=(0,.5), y=.5, scale=2)
         self.out_of_time = False
 
         self.earnings = 0
+        self.money_counter = Text(parent=self.ui, x=.82, y=.15, text='100.000', origin=(.5,0), scale=1.5, color=color.green)
+        self.money_counter.dollar_text = Text(parent=self.money_counter, text='$', origin=(.5,0), x=-.135, color=color.green)
 
-        self.money_counter = Text(x=.54, y=.15, text='<scale:1.1>$', scale=1.5, color=color.green)
-        self.money_counter.number_text = Text(parent=self.money_counter, text='100.000', origin_x=.5, x=.055, color=color.green)
+        self.tools_menu = Entity(parent=self.ui, position=(.75,-.0), scale=.15)
+        self.tools = [
+        'place_tooth',
+        # 'syringe',
+        'hammer'
+        ]
+        self.tool = 'place_tooth'
 
-        self.ui = Entity(parent=camera.ui, position=(.75,-.0), scale=.15)
         for i, tool in enumerate(self.tools):
             b = Button(
-                parent=self.ui,
-                text=tool,
-                y=-i,
-                scale=.9,
-                color=color.light_gray,
-                on_click=Func(setattr, self, 'tool', tool)
-                )
+            parent=self.tools_menu,
+            text=tool,
+            y=-i,
+            scale=.9,
+            color=color.light_gray,
+            on_click=Func(setattr, self, 'tool', tool)
+            )
 
     @property
     def tool(self):
@@ -74,14 +84,29 @@ class JawMinigame(Entity):
     @earnings.setter
     def earnings(self, value):
         self._earnings = value
-        self.money_counter.number_text.text = value
+        self.money_counter.text = f'{value:,}'
+
 
     def generate_jaw(self):
-        jaw = Entity()
-        jaw_model = Entity(parent=jaw, model=copy(self.jaw_model.model), texture='Munn_1_lambert1_BaseColor', rotation_y=180, scale=1.5, y=-2)
+        jaw = Entity(parent=self, rotation_x=-10)
+        jaw_model = Entity(
+            parent=jaw,
+            model=copy(self.jaw_model.model),
+            texture='Munn_1_lambert1_BaseColor',
+            rotation_y=180,
+            rotation_x=-10,
+            scale=1.5,
+            y=-2.7,
+            z=-.2
+            )
         jaw_model.texture.filtering = False
         jaw.teeth = list()
 
+        tooth_positions = [
+            (-4.6,-1.4), (-4.3,-2.5), (-3.6,-3.7), (-2.6,-4.4), (-1.3,-4.8),
+            (-0.0,-4.7), (1.1,-4.3), (2.0,-3.7), (2.8,-2.7), (3.2,-1.4)
+        ]
+        # tooth_positions += [(-e[0]-1, e[1]) for e in reversed(tooth_positions)]
         for i in range(10):
             tooth_slot = Button(
                 parent=jaw,
@@ -90,10 +115,14 @@ class JawMinigame(Entity):
                 texture='white_cube',
                 color=color.salmon,
                 highlight_color=color.smoke,
-                x=(-5+i)*1.1,
-                z=curve.out_quad_boomerang(i/9) * -4
+                # x=(-5+i)*1.1,
+                # z=curve.out_quad_boomerang(i/9) * -4
                 )
-            tooth_slot.look_at(Vec3(0,0,2))
+            if i < len(tooth_positions):
+                tooth_slot.x = tooth_positions[i][0]
+                tooth_slot.z = tooth_positions[i][1]
+
+            tooth_slot.look_at(Vec3(0,0,0))
             jaw.teeth.append(tooth_slot)
 
             tooth_slot.tooth = Entity(
@@ -167,8 +196,10 @@ class JawMinigame(Entity):
             for i, e in enumerate(self.jaw.teeth):
                 self.finished_jaw.teeth[i].tooth.color = e.tooth.color
 
+            self.finished_jaw.enabled = True
             self.finished_jaw.x = 0
             self.finished_jaw.animate_x(-20, duration=1)
+            invoke(setattr, self.finished_jaw, 'enabled', False, delay=1)
             self.jaw.x = 20
             self.randomize_jaw(self.jaw)
             self.jaw.animate_x(0, duration=1, delay=.5)
@@ -194,9 +225,9 @@ class JawMinigame(Entity):
     def update(self):
         if self.time <= 0:
             if not self.out_of_time:
-                destroy(self.cursor)
+                # destroy(self.cursor)
                 camera.overlay.fade_in(delay=.5, duration=1)
-                self.ui.animate_x((.5*camera.aspect_ratio)+.05, duration=.25, curve=curve.in_out_expo)
+                self.tools_menu.animate_x((.5*camera.aspect_ratio)+.05, duration=.25, curve=curve.in_out_expo)
                 destroy(self.ui, delay=1.5)
                 destroy(self)
 
@@ -216,13 +247,29 @@ class JawMinigame(Entity):
         self.timer.text = ("%1f" % self.time)[:5]
 
 
+    def on_enable(self):
+        self.ui.enabled = True
+
+    def on_disable(self):
+        self.ui.enabled = False
+
+
+    def animate_background_color(self):
+        # self.bg.color=color.random_color().tint(-.5)
+        step = 1/150*128
+        self.bg.animate_color(color.random_color().tint(-.25), curve=curve.linear, duration=step)
+        invoke(self.animate_background_color, delay=step)
+
 
 if __name__ == '__main__':
     app = Ursina()
 
+    window.color = color._32
+    Text.default_resolution *= 4
+    Text.default_font = 'monogram_extended.ttf'
+    Text.size *= 2
+
     jaw_game = JawMinigame()
 
-    window.color = color._32
-    editor_camera = EditorCamera(y=1)
-    editor_camera.rotation_x = 20
+
     app.run()
