@@ -10,8 +10,6 @@ window.color = color.light_gray
 camera.orthographic = True
 camera.fov = 20
 
-player_speed = 10
-
 player_top_constraint = 3
 player_bottom_constraint = -5
 
@@ -63,20 +61,24 @@ def go_to_next_street():
 
 def update():
     player_controls()
+    enemies_chase_player()
     if player.x >= (camera.fov * camera.aspect_ratio / 2 - player.scale_x):
         go_to_next_street()
 
 def player_controls():
     if player.x < (camera.fov * camera.aspect_ratio / 2 - player.scale_x):
-        player.x += held_keys["d"] * time.dt * player_speed
+        player.x += held_keys["d"] * time.dt * player.speed
     if player.x > -(camera.fov * camera.aspect_ratio / 2 - player.scale_x):
-        player.x -= held_keys["a"] * time.dt * player_speed
+        player.x -= held_keys["a"] * time.dt * player.speed
     if player.y < player_top_constraint:
-        player.y += held_keys["w"] * time.dt * player_speed
+        player.y += held_keys["w"] * time.dt * player.speed
     if player.y > (player_bottom_constraint + player.scale_y/2):
-        player.y -= held_keys["s"] * time.dt * player_speed
+        player.y -= held_keys["s"] * time.dt * player.speed
 
-
+def enemies_chase_player():
+    for enemy in enemies:
+        if enemy.hp < enemy.max_hp:
+            enemy.position = lerp(enemy.position, player.position, enemy.speed * time.dt)
 
 def input(key):
     if key == "space":
@@ -86,7 +88,6 @@ def input(key):
                 if(enemy.hp <= 0):
                     enemies.remove(enemy)
                     destroy(enemy)
-                camera.shake()
 
 
 

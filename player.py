@@ -10,6 +10,7 @@ class Player(Entity):
         self.hp = 32 #number of teeth
         self.punch_power = 3
         self.kick_power = 5
+        self.speed = 10
 
         for key, value in kwargs.items():
             setattr(self, key, value)

@@ -8,7 +8,9 @@ class Enemy(Entity):
                     color=color.red.tint(random.random() / 2),
                     scale_y=2,
                     z=-5);
-        self.hp = 10
+        self.max_hp = 10
+        self.hp = self.max_hp
+        self.speed = 1
 
         self.healthBar = HealthBar(
         world_parent = self,
