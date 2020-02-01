@@ -259,6 +259,7 @@ class JawMinigame(Entity):
         self.jaw.x = 20
         self.jaw.animate_x(0, duration=1)
         self.time = 30
+        self.out_of_time = False
         self.timer.scale = 2
         self.timer.color = color.smoke
         self.earnings = 0
