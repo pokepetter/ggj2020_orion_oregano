@@ -1,6 +1,7 @@
 from ursina import *
 from enemy import Enemy
 from player import Player
+from dialogue_box import DialogueBox
 
 
 window.set_z_order(window.Z_top)
@@ -13,8 +14,9 @@ camera.fov = 20
 player_top_constraint = 3
 player_bottom_constraint = -5
 
-enemies = []
+current_street = 1
 
+enemies = []
 
 
 asphalt = Entity(
@@ -41,6 +43,12 @@ below_ground = Entity(
 
 player = Player()
 
+dialogue = DialogueBox([
+            ["Tooth criminal", "Omg"],
+            ["Tooth criminal", "There are people here"],
+            ["Tooth criminal", "I gotta..\nI gotta knock their <red>teeth <default>out!"]
+        ], parent=camera.ui)
+
 
 def spawn_random_enemies(amount):
     for i in range(amount):
@@ -51,17 +59,19 @@ spawn_random_enemies(3)
 
 
 def go_to_next_street():
-    global enemies
+    global enemies, current_street
     player.x = -(camera.fov * camera.aspect_ratio / 2 - player.scale_x)
     for enemy in enemies:
         destroy(enemy)
     enemies = []
     spawn_random_enemies(3)
+    current_street += 1
 
 
 def update():
-    player_controls()
-    enemies_chase_player()
+    if not dialogue:
+        player_controls()
+        enemies_chase_player()
     if player.x >= (camera.fov * camera.aspect_ratio / 2 - player.scale_x) and enemies==[]:
         go_to_next_street()
 
@@ -84,7 +94,10 @@ def enemies_chase_player():
 
 
 def input(key):
-    if key == "space":
+    if dialogue and key == "space":
+        dialogue.current_text += 1
+
+    if not dialogue and key == "space":
         for enemy in enemies:
             if distance2d(player.position, enemy.position) < 1:
                 enemy.hp = enemy.hp - player.punch_power
