@@ -37,6 +37,11 @@ class Player(Entity):
         self._hp = value
         self.healthBar.value = value
 
+    def reset():
+        self.hp = 32
+        x = -15
+        y = 0
+
 if __name__ == '__main__':
   app = Ursina()
   enemy = Enemy()
