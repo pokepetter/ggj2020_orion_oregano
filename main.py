@@ -1,12 +1,12 @@
 from ursina import *
 from dentist import JawMinigame
-
+from beat_em_up import BeatEmUp
 
 
 class DirtyDentist(Entity):
     def __init__(self):
         super().__init__(self, eternal=True)
-        self.scene = None
+        self.scene_0 = BeatEmUp(parent=self, enabled=False)
         self.scene_1 = JawMinigame(parent=self, enabled=False)
 
 
@@ -21,7 +21,7 @@ class DirtyDentist(Entity):
 
     def input(self, key):
         if key == '1':
-            self.go_to_scene(BeatEmUp)
+            self.go_to_scene(self.scene_0)
         if key == '2':
             self.go_to_scene(self.scene_1)
 
