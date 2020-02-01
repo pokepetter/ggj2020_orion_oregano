@@ -7,7 +7,6 @@ class BeatEmUp(Entity):
 
     def __init__(self, **kwargs):
         super().__init__()
-        self.ui = Entity(parent=camera.ui)
         window.color = color.light_gray
         camera.orthographic = True
         camera.fov = 20
@@ -29,6 +28,7 @@ class BeatEmUp(Entity):
             scale = (1000, 8, 10),
             collider = 'box',
             ignore = True,
+            parent = self
             )
 
         self.below_ground = Entity(
@@ -40,9 +40,10 @@ class BeatEmUp(Entity):
             scale = (1000, 8, 10),
             collider = 'box',
             ignore = True,
+            parent = self
             )
 
-        self.player = Player()
+        self.player = Player(parent = self)
 
         self.dialogue = DialogueBox([
                     ["Tooth criminal", "Omg"],
@@ -58,7 +59,8 @@ class BeatEmUp(Entity):
         for i in range(amount):
             self.enemies.append(Enemy(
                 x = random.randint(-10, 10),
-                y = random.randint(-3, 2)))
+                y = random.randint(-3, 2),
+                parent = self))
 
 
 
@@ -83,7 +85,7 @@ class BeatEmUp(Entity):
     def player_controls(self):
         if self.player.x < (camera.fov * camera.aspect_ratio / 2 - self.player.scale_x):
             self.player.x += held_keys["d"] * time.dt * self.player.speed
-        if self.player.x > -(camera.fov * camera.aspect_ratio / 2 - player.scale_x):
+        if self.player.x > -(camera.fov * camera.aspect_ratio / 2 - self.player.scale_x):
             self.player.x -= held_keys["a"] * time.dt * self.player.speed
         if self.player.y < self.player_top_constraint:
             self.player.y += held_keys["w"] * time.dt * self.player.speed
@@ -110,18 +112,13 @@ class BeatEmUp(Entity):
                         self.enemies.remove(enemy)
                         destroy(enemy)
 
-    def end(self):
-        
 
+input_handler.bind('right arrow', 'd')
+input_handler.bind('left arrow', 'a')
+input_handler.bind('up arrow', 'w')
+input_handler.bind('down arrow', 's')
 
-
-#
-# window.size = (window.fullscreen_size[0]//2, window.fullscreen_size[1]//2)
-# window.position = (int(window.size[0]), int(window.size[1]-(window.size[1]/2)))
-# window.borderless = False
-# window.fullscreen = False
-
-# input_handler.bind('right arrow', 'd')
-# input_handler.bind('left arrow', 'a')
-# input_handler.bind('up arrow', 'w')
-# input_handler.bind('down arrow', 's')
+if __name__ == "__main__":
+    app = Ursina()
+    beat_em_up = BeatEmUp()
+    app.run()
