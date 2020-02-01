@@ -1,15 +1,13 @@
 from ursina import *
 
-
-
-class Enemy(Entity):
+class Player(Entity):
     def __init__(self, **kwargs):
         super().__init__(
-                    model='quad',
-                    color=color.red.tint(random.random() / 2),
-                    scale_y=2,
-                    z=-5);
-        self.hp = 10
+            model='quad',
+            color=color.yellow,
+            scale_y=2,
+            z=-5);
+        self.hp = 32 #number of teeth
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -23,8 +21,6 @@ class Enemy(Entity):
       if value <= 0:
         self.die()
 
-    def attack(self, value):
-        hp(self, self.hp - value)
 
 
 if __name__ == '__main__':

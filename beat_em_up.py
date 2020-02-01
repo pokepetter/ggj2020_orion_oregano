@@ -1,5 +1,6 @@
 from ursina import *
 from enemy import Enemy
+from player import Player
 
 
 window.set_z_order(window.Z_top)
@@ -40,22 +41,14 @@ below_ground = Entity(
     ignore = True,
     )
 
-player = Entity(
-    model='quad',
-    color=color.orange,
-    scale_y=2,
-    z=-5)
+player = Player()
 
 
 def spawn_random_enemies(amount):
     for i in range(amount):
         enemies.append(Enemy(
-                    model='quad',
-                    color=color.red.tint(random.random() / 2),
-                    scale_y=2,
-                    x = random.randint(-10, 10),
-                    y = random.randint(-3, 2),
-                    z=-5))
+            x = random.randint(-10, 10),
+            y = random.randint(-3, 2)))
 spawn_random_enemies(3)
 
 
