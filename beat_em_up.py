@@ -1,4 +1,6 @@
 from ursina import *
+from enemy import Enemy
+from player import Player
 
 
 window.set_z_order(window.Z_top)
@@ -8,8 +10,6 @@ window.color = color.light_gray
 camera.orthographic = True
 camera.fov = 20
 
-player_speed = 10
-
 player_top_constraint = 3
 player_bottom_constraint = -5
 
@@ -18,9 +18,9 @@ enemies = []
 
 
 asphalt = Entity(
-    model = 'cube',
+    model = 'quad',
     color = color.light_gray.tint(-.4),
-    z = -.1,
+    z = 0,
     y = 3,
     origin_y = .5,
     scale = (1000, 8, 10),
@@ -29,32 +29,24 @@ asphalt = Entity(
     )
 
 below_ground = Entity(
-    model = 'cube',
+    model = 'quad',
     color = color.olive.tint(-.4),
-    z = -.1,
+    z = 0,
     y = -5,
     origin_y = .5,
-    scale = (1000, 100, 10),
+    scale = (1000, 8, 10),
     collider = 'box',
     ignore = True,
     )
 
-player = Entity(
-        model='cube',
-        color=color.orange,
-        scale_y=2,
-        z=-5)
+player = Player()
 
 
 def spawn_random_enemies(amount):
     for i in range(amount):
-        enemies.append(Entity(
-                    model='cube',
-                    color=color.red,
-                    scale_y=2,
-                    x = random.randint(-10, 10),
-                    y = random.randint(-3, 2),
-                    z=-5))
+        enemies.append(Enemy(
+            x = random.randint(-10, 10),
+            y = random.randint(-3, 2)))
 spawn_random_enemies(3)
 
 
@@ -69,23 +61,39 @@ def go_to_next_street():
 
 def update():
     player_controls()
-    if player.x >= (camera.fov * camera.aspect_ratio / 2 - player.scale_x):
+    enemies_chase_player()
+    if player.x >= (camera.fov * camera.aspect_ratio / 2 - player.scale_x) and enemies==[]:
         go_to_next_street()
 
 def player_controls():
     if player.x < (camera.fov * camera.aspect_ratio / 2 - player.scale_x):
-        player.x += held_keys["d"] * time.dt * player_speed
+        player.x += held_keys["d"] * time.dt * player.speed
     if player.x > -(camera.fov * camera.aspect_ratio / 2 - player.scale_x):
-        player.x -= held_keys["a"] * time.dt * player_speed
+        player.x -= held_keys["a"] * time.dt * player.speed
     if player.y < player_top_constraint:
-        player.y += held_keys["w"] * time.dt * player_speed
+        player.y += held_keys["w"] * time.dt * player.speed
     if player.y > (player_bottom_constraint + player.scale_y/2):
-        player.y -= held_keys["s"] * time.dt * player_speed
+        player.y -= held_keys["s"] * time.dt * player.speed
+
+def enemies_chase_player():
+    for enemy in enemies:
+        if enemy.hp < enemy.max_hp:
+            enemy.position = lerp(enemy.position, player.position, enemy.speed * time.dt)
+            if distance2d(player.position, enemy.position) < 1:
+                player.hp -= enemy.attack()
 
 
+def input(key):
+    if key == "space":
+        for enemy in enemies:
+            if distance2d(player.position, enemy.position) < 1:
+                enemy.hp = enemy.hp - player.punch_power
+                if(enemy.hp <= 0):
+                    enemies.remove(enemy)
+                    destroy(enemy)
 
-
-
+    if key == "t":
+        print(time.time())
 
 
 
