@@ -5,19 +5,28 @@ from beat_em_up import BeatEmUp
 
 class DirtyDentist(Entity):
     def __init__(self):
-        super().__init__(self, eternal=True)
+        super().__init__(self)
         self.scene = None
-        self.scene_0 = BeatEmUp(parent=self, enabled=False)
-        self.scene_1 = JawMinigame(parent=self, enabled=False)
-
+        self.beat_em_up_scene = BeatEmUp(parent=self, enabled=False)
+        self.dentist_scene = JawMinigame(parent=self, enabled=False)
 
 
     def go_to_scene(self, value):
         print('go to scene:', value)
         camera.overlay.fade_in(duration=1)
-        if self.scene:
-            invoke(setattr, self.scene, 'enabled', False, delay=1)
-        self.scene = value
+        if value == self.beat_em_up_scene:
+            destroy(self.beat_em_up_scene, delay=1)
+            camera.fov = 20
+            camera.orthographic = True
+            camera.position = (0,0,-20)
+            camera.rotation = (0,0,0)
+            self.beat_em_up_scene = BeatEmUp(parent=self, enabled=False)
+            self.scene = self.beat_em_up_scene
+            invoke(setattr, self.dentist_scene, 'enabled', False, delay=1)
+        else:
+            invoke(setattr, self.beat_em_up_scene, 'enabled', False, delay=1)
+            self.scene = self.dentist_scene
+
         invoke(setattr, self.scene, 'enabled', True, delay=1)
         camera.overlay.fade_out(duration=1, delay=1.1)
 
@@ -25,21 +34,21 @@ class DirtyDentist(Entity):
 
     def input(self, key):
         if key == '1':
-            self.go_to_scene(self.scene_0)
+            self.go_to_scene(self.beat_em_up_scene)
         if key == '2':
-            self.go_to_scene(self.scene_1)
+            self.go_to_scene(self.dentist_scene)
 
+        if key == 'f':
+            print(camera.fov, self.beat_em_up_scene.player.y, self.beat_em_up_scene.player_top_constraint)
 
 
 
 if __name__ == '__main__':
     app = Ursina()
-    # window.color = color._32
-    # window.fps_counter.enabled = False
-    # window.exit_button.visible = False
-    # Text.default_resolution *= 4
-    # Text.default_font = 'monogram_extended.ttf'
-    # Text.size *= 2
+    window.color = color._32
+    Text.default_resolution *= 4
+    Text.default_font = 'monogram_extended.ttf'
+    Text.size *= 2
 
     DirtyDentist()
     app.run()

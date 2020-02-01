@@ -6,10 +6,8 @@ from dialogue_box import DialogueBox
 class BeatEmUp(Entity):
 
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
         window.color = color.light_gray
-        camera.orthographic = True
-        camera.fov = 20
 
         self.player_top_constraint = 3
         self.player_bottom_constraint = -5
@@ -44,16 +42,36 @@ class BeatEmUp(Entity):
             parent = self
             )
 
-        self.player = Player(parent = self)
+        self.player = Player(parent=self)
 
+        self.ui = Entity(parent=camera.ui)
         self.dialogue = DialogueBox([
                     ["Tooth criminal", "Omg"],
                     ["Tooth criminal", "There are people here"],
                     ["Tooth criminal", "I gotta..\nI gotta knock their <red>teeth <default>out!"]
-                ], parent=camera.ui)
+                ], parent=self.ui)
+        self.dialogue.t.parent = self.ui
+        self.dialogue.name_text.parent = self.ui
 
         self.spawn_random_enemies(3)
 
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
+    def on_destroy(self):
+        destroy(self.ui)
+
+
+    def on_enable(self):
+        self.ui.enabled = True
+        self.player.healthBar.enabled = True
+
+
+    def on_disable(self):
+        self.ui.enabled = False
+        self.player.healthBar.enabled = False
 
 
     def spawn_random_enemies(self, amount):
@@ -135,5 +153,13 @@ input_handler.bind('down arrow', 's')
 
 if __name__ == "__main__":
     app = Ursina()
-    beat_em_up = BeatEmUp()
+    camera.orthographic = True
+    camera.fov = 20
+
+    beat_em_up = BeatEmUp(enabled = True)
+    def input(key):
+        if key == 'f':
+            print(camera.fov, beat_em_up.player.y, beat_em_up.player_top_constraint)
+
+
     app.run()

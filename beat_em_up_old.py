@@ -12,12 +12,6 @@ class BeatEmUp(Entity):
         self.player_top_constraint = 3
         self.player_bottom_constraint = -5
 
-        self.current_street = 1
-        self.last_street = 3
-
-        self.enemies = []
-
-
         self.asphalt = Entity(
             model = 'quad',
             color = color.light_gray.tint(-.4),
@@ -42,7 +36,7 @@ class BeatEmUp(Entity):
             parent = self
             )
 
-        self.player = Player(parent = self)
+        self.player = Player(parent=self)
 
         self.ui = Entity(parent=camera.ui)
         self.dialogue = DialogueBox([
@@ -53,14 +47,18 @@ class BeatEmUp(Entity):
         self.dialogue.t.parent = self.ui
         self.dialogue.name_text.parent = self.ui
 
-        self.spawn_random_enemies(3)
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
 
     def on_enable(self):
-        # self.player.reset()
+        self.player.enabled = True
+        self.current_street = 1
+        self.last_street = 3
+        self.enemies = []
+        self.spawn_random_enemies(3)
+
         camera.orthographic = True
         camera.fov = 20
         self.ui.enabled = True
@@ -71,6 +69,7 @@ class BeatEmUp(Entity):
     def on_disable(self):
 
         print('---------------')
+        self.player.enabled = False
         self.ui.enabled = False
         self.player.healthBar.enabled = False
         print('---------------')

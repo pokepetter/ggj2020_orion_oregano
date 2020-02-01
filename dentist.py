@@ -242,7 +242,7 @@ class JawMinigame(Entity):
 
         if self.time <= 0:
             if not self.out_of_time:
-                self.enabled = False
+                self.end()
 
             self.out_of_time = True
             return
@@ -259,17 +259,11 @@ class JawMinigame(Entity):
         self.time = max(0, self.time)
         self.timer.text = ("%1f" % self.time)[:5]
 
-    #
-    def on_enable(self):
 
-        # print('-----------')
-        # invoke(setattr, self.ui, 'enabled', True, delay=1)
-        # invoke(setattr, self.cursor, 'enabled', True, delay=2)
-        # self.jaw.animate_x(0, duration=1, delay=1)
-        # invoke(setattr, self, 'started', True, delay=2)
-        # invoke(self.music.play, delay=2.1)
-        # print('-----------')
-        print('start')
+    def on_enable(self):
+        camera.orthographic = False
+        camera.fov = 60
+        self.editor_camera.enabled = True
         self.jaw.x = 20
         self.jaw.animate_x(0, duration=1)
         self.time = 30
@@ -280,26 +274,19 @@ class JawMinigame(Entity):
         invoke(setattr, self.ui, 'enabled', True, delay=0)
         invoke(setattr, self.cursor, 'enabled', True, delay=1)
         invoke(setattr, self, 'started', True, delay=1)
-        # self.music.fade_out(duration=0, delay=0)
         invoke(self.music.play, delay=1)
-        # invoke(self.animate_background_color, delay=1.01)
+
 
     def on_disable(self):
-        # self.ui.enabled=False
-    # def stop(self):
         self.cursor.enabled = False
-        self.ui.enabled=False
+        self.ui.enabled = False
+        self.editor_camera.enabled = False
 
-        if self.parent and self.out_of_time:
-            self.parent.go_to_scene(self.parent.scene_0)
-        # self.music.fade_out(duration=1, destroy_on_ended=False)
 
-        # if self.next_scene:
-        # camera.overlay.fade_in(delay=1, duration=1)
-        # invoke(setattr, self, 'enabled', False, delay=2)
-        # invoke(setattr, self.next_scene, 'enabled', True, delay=2)
-        # camera.overlay.fade_out(delay=2.1, duration=1)
-    #
+    def end(self):
+        if self.parent:
+            self.started = False
+            self.parent.go_to_scene(self.parent.beat_em_up_scene)
 
 
     def animate_background_color(self):
