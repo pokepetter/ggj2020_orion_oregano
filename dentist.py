@@ -290,7 +290,7 @@ class JawMinigame(Entity):
         self.cursor.enabled = False
         self.ui.enabled=False
 
-        if self.parent:
+        if self.parent and self.out_of_time:
             self.parent.go_to_scene(self.parent.scene_0)
         # self.music.fade_out(duration=1, destroy_on_ended=False)
 

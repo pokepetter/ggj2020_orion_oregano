@@ -15,20 +15,24 @@ class DialogueBox(Entity):
             scale = 2,
             y = -0.1,
             x = -0.4,
-            z = -5
-        )
+            z = -5,
+            )
+        # self.name_text.world_parent = self
         self.t = Text(
             scale = 2,
             y = -0.2,
             x = -0.4,
-            z = -5
+            z = -5,
             )
+        # self.t.world_parent = self
 
-        self.image = Entity(model='quad',
-        texture='Munn_1_lambert1_BaseColor',
-        parent=self,
-        x = -0.35,
-        scale_y = 0.5)
+        self.image = Entity(
+            model='quad',
+            texture='Munn_1_lambert1_BaseColor',
+            parent=self,
+            x = -0.35,
+            scale_y = 0.5
+            )
 
         self.image.world_scale_x = self.image.world_scale_y
 
@@ -37,6 +41,7 @@ class DialogueBox(Entity):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
 
     @property
     def current_text(self):
@@ -57,7 +62,19 @@ class DialogueBox(Entity):
 
 
 
+
 if __name__ == '__main__':
-  app = Ursina()
-  enemy = Enemy()
-  app.run()
+    app = Ursina()
+    enemy = DialogueBox([
+        ["Tooth criminal", "Omg"],
+        ["Tooth criminal", "There are people here"],
+        ["Tooth criminal", "I gotta..\nI gotta knock their <red>teeth <default>out!"]
+        ],
+        enabled=True)
+    camera.orthographic
+    camera.fov = 20
+    def input(key):
+        if key == 'tab':
+            enemy.enabled = not enemy.enabled
+
+    app.run()
