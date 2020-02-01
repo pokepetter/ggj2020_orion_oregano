@@ -14,15 +14,23 @@ class DialogueBox(Entity):
         self.name_text = Text(
             scale = 2,
             y = -0.1,
-            x = -0.5,
+            x = -0.4,
             z = -5
         )
         self.t = Text(
             scale = 2,
             y = -0.2,
-            x = -0.5,
+            x = -0.4,
             z = -5
             )
+
+        self.image = Entity(model='quad',
+        texture='Munn_1_lambert1_BaseColor',
+        parent=self,
+        x = -0.35,
+        scale_y = 0.5)
+
+        self.image.world_scale_x = self.image.world_scale_y
 
         self.texts = texts
         self.current_text = 0
@@ -42,6 +50,7 @@ class DialogueBox(Entity):
             destroy(self.name_text)
             destroy(self)
         self.name_text.text = "<yellow>" + self.texts[value][0]
+        self.image.texture = self.texts[value][0]
         self.t.text = self.texts[value][1]
         self.t.appear()
 
