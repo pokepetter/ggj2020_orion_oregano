@@ -15,6 +15,7 @@ class BeatEmUp(Entity):
         self.player_bottom_constraint = -5
 
         self.current_street = 1
+        self.last_street = 3
 
         self.enemies = []
 
@@ -66,13 +67,20 @@ class BeatEmUp(Entity):
 
 
     def go_to_next_street(self):
-        global enemies, current_street
+        self.current_street += 1
         self.player.x = -(camera.fov * camera.aspect_ratio / 2 - self.player.scale_x)
         for enemy in self.enemies:
             destroy(enemy)
         self.enemies = []
         self.spawn_random_enemies(3)
-        self.current_street += 1
+        if(self.current_street == 3):
+            self.boss = Enemy(
+                x = random.randint(-10, 10),
+                y = random.randint(-3, 2),
+                hp = 20,
+                parent = self)
+
+
 
 
     def update(self):
