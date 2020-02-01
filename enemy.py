@@ -1,7 +1,5 @@
 from ursina import *
 
-
-
 class Enemy(Entity):
     def __init__(self, **kwargs):
         super().__init__(
@@ -16,15 +14,16 @@ class Enemy(Entity):
 
     @property
     def hp(self):
-      return_self.hp
+      return self._hp
 
     @hp.setter
     def hp(self, value):
-      if value <= 0:
-        self.die()
-
-    def attack(self, value):
-        hp(self, self.hp - value)
+        self._hp = value
+    #     if value <= 0:
+    #         self.die()
+    #
+    # def die(self):
+    #     destroy(self)
 
 
 if __name__ == '__main__':

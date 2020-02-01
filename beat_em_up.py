@@ -77,9 +77,15 @@ def player_controls():
         player.y -= held_keys["s"] * time.dt * player_speed
 
 
+
 def input(key):
     if key == "space":
-        print("TODO implement punch")
+        for enemy in enemies:
+            if distance2d(player.position, enemy.position) < 1:
+                enemy.hp = enemy.hp - 3
+                if(enemy.hp < 0):
+                    enemies.remove(enemy)
+                    destroy(enemy)
 
 
 window.size = (window.fullscreen_size[0]//2, window.fullscreen_size[1]//2)
