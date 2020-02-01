@@ -62,7 +62,7 @@ def go_to_next_street():
 def update():
     player_controls()
     enemies_chase_player()
-    if player.x >= (camera.fov * camera.aspect_ratio / 2 - player.scale_x):
+    if player.x >= (camera.fov * camera.aspect_ratio / 2 - player.scale_x) and enemies==[]:
         go_to_next_street()
 
 def player_controls():
