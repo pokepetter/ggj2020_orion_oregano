@@ -11,13 +11,18 @@ class Enemy(Entity):
         self.speed = 1
         self.attack_power = 1
         self.max_hp = 10
-        if (boss):
-            self.max_hp = 20
-            attack_power = 2
-
-        self.hp = self.max_hp
         self.time_between_attacks = 3
         self.time_of_last_attack = 0
+
+        if (boss):
+            self.max_hp = 20
+            attack_power = 3
+            self.time_between_attacks = 2
+
+        self.hp = self.max_hp
+        if (boss):
+            self.hp -= 1
+
 
         self.healthBar = HealthBar(
         world_parent = self,

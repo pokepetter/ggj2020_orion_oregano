@@ -79,6 +79,11 @@ class BeatEmUp(Entity):
                 y = random.randint(-3, 2),
                 boss=True,
                 parent = self))
+            self.dialogue = DialogueBox([
+                        ["Margaret", "I'll crush you"],
+                        ["Tooth criminal", "no u won't"],
+                        ["Margaret", "Yes I will!!!"]
+                    ], parent=camera.ui)
         # if(self.current_street == 4):
         #     #end this shit
 
