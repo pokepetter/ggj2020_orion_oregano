@@ -79,6 +79,9 @@ def enemies_chase_player():
     for enemy in enemies:
         if enemy.hp < enemy.max_hp:
             enemy.position = lerp(enemy.position, player.position, enemy.speed * time.dt)
+            if distance2d(player.position, enemy.position) < 1:
+                player.hp -= enemy.attack()
+
 
 def input(key):
     if key == "space":
@@ -88,6 +91,9 @@ def input(key):
                 if(enemy.hp <= 0):
                     enemies.remove(enemy)
                     destroy(enemy)
+
+    if key == "t":
+        print(time.time())
 
 
 

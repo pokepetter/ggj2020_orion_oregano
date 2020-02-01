@@ -11,6 +11,9 @@ class Enemy(Entity):
         self.max_hp = 10
         self.hp = self.max_hp
         self.speed = 1
+        self.attack_power = 1
+        self.time_between_attacks = 3
+        self.time_of_last_attack = 0
 
         self.healthBar = HealthBar(
         world_parent = self,
@@ -39,6 +42,13 @@ class Enemy(Entity):
     #
     # def die(self):
     #     destroy(self)
+
+    def attack(self):
+        if time.time() < self.time_of_last_attack + self.time_between_attacks:
+            return 0
+        else:
+            self.time_of_last_attack = time.time()
+            return self.attack_power
 
 
 if __name__ == '__main__':
