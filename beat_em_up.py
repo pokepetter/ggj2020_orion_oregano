@@ -1,4 +1,5 @@
 from ursina import *
+from enemy import Enemy
 
 
 window.set_z_order(window.Z_top)
@@ -18,9 +19,9 @@ enemies = []
 
 
 asphalt = Entity(
-    model = 'cube',
+    model = 'quad',
     color = color.light_gray.tint(-.4),
-    z = -.1,
+    z = 0,
     y = 3,
     origin_y = .5,
     scale = (1000, 8, 10),
@@ -29,28 +30,28 @@ asphalt = Entity(
     )
 
 below_ground = Entity(
-    model = 'cube',
+    model = 'quad',
     color = color.olive.tint(-.4),
-    z = -.1,
+    z = 0,
     y = -5,
     origin_y = .5,
-    scale = (1000, 100, 10),
+    scale = (1000, 8, 10),
     collider = 'box',
     ignore = True,
     )
 
 player = Entity(
-        model='cube',
-        color=color.orange,
-        scale_y=2,
-        z=-5)
+    model='quad',
+    color=color.orange,
+    scale_y=2,
+    z=-5)
 
 
 def spawn_random_enemies(amount):
     for i in range(amount):
-        enemies.append(Entity(
-                    model='cube',
-                    color=color.red,
+        enemies.append(Enemy(
+                    model='quad',
+                    color=color.red.tint(random.random() / 2),
                     scale_y=2,
                     x = random.randint(-10, 10),
                     y = random.randint(-3, 2),
@@ -83,11 +84,9 @@ def player_controls():
         player.y -= held_keys["s"] * time.dt * player_speed
 
 
-
-
-
-
-
+def input(key):
+    if key == "space":
+        print("TODO implement punch")
 
 
 window.size = (window.fullscreen_size[0]//2, window.fullscreen_size[1]//2)

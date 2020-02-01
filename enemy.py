@@ -4,10 +4,11 @@ from ursina import *
 
 class Enemy(Entity):
     def __init__(self, **kwargs):
+        super().__init__();
         self.hp = 10
 
         for key, value in kwargs.items():
-        setattr(self, key, value)
+            setattr(self, key, value)
 
 
 
