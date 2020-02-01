@@ -8,6 +8,8 @@ class Player(Entity):
             scale_y=2,
             z=-5);
         self.hp = 32 #number of teeth
+        self.punch_power = 3
+        self.kick_power = 5
 
         for key, value in kwargs.items():
             setattr(self, key, value)

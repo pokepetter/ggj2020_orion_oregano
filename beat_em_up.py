@@ -82,10 +82,13 @@ def input(key):
     if key == "space":
         for enemy in enemies:
             if distance2d(player.position, enemy.position) < 1:
-                enemy.hp = enemy.hp - 3
-                if(enemy.hp < 0):
+                enemy.hp = enemy.hp - player.punch_power
+                if(enemy.hp <= 0):
                     enemies.remove(enemy)
                     destroy(enemy)
+                camera.shake()
+
+
 
 
 window.size = (window.fullscreen_size[0]//2, window.fullscreen_size[1]//2)

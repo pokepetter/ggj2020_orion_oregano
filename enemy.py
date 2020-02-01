@@ -1,4 +1,5 @@
 from ursina import *
+from ursina.prefabs.health_bar import HealthBar
 
 class Enemy(Entity):
     def __init__(self, **kwargs):
@@ -8,6 +9,17 @@ class Enemy(Entity):
                     scale_y=2,
                     z=-5);
         self.hp = 10
+
+        self.healthBar = HealthBar(
+        world_parent = self,
+        position = (Vec3(-1, 1, 0)),
+        scale_x = 2,
+        max_value = self.hp,
+        show_text = False,
+        show_lines = False,
+        roundness = 0.5
+        )
+
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -19,6 +31,7 @@ class Enemy(Entity):
     @hp.setter
     def hp(self, value):
         self._hp = value
+        self.healthBar.value = value
     #     if value <= 0:
     #         self.die()
     #
