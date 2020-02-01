@@ -50,7 +50,7 @@ class DialogueBox(Entity):
             destroy(self.name_text)
             destroy(self)
         self.name_text.text = "<yellow>" + self.texts[value][0]
-        self.image.texture = self.texts[value][0]
+        self.image.texture = "textures/" + self.texts[value][0]
         self.t.text = self.texts[value][1]
         self.t.appear()
 
