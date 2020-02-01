@@ -7,6 +7,7 @@ class Player(Entity):
             model='quad',
             color=color.yellow,
             scale_y=2,
+            x = -15,
             z=-5);
         self.hp = 32 #number of teeth
         self.punch_power = 3
@@ -21,7 +22,7 @@ class Player(Entity):
         show_text = False,
         show_lines = False,
         roundness = 0.5,
-        z = -10,
+        z = 0,
         )
 
         for key, value in kwargs.items():
