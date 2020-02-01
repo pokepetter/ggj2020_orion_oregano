@@ -9,7 +9,6 @@ class JawMinigame(Entity):
         super().__init__(**kwargs)
 
         self.started = False
-        self.next_scene = None
 
         self.ui = Entity(parent=camera.ui)
         self.editor_camera = EditorCamera(parent=self, rotate_around_mouse_hit=False, y=1)
@@ -22,8 +21,6 @@ class JawMinigame(Entity):
             # texture_scale=(64,32)
             )
         self.bg.texture.filtering = None
-        self.animate_background_color()
-
         self.music = Audio('dentist', parent=self, repeat=True, autoplay=False)
         # self.music.volume = 1
         # self.floor = Entity(parent=self, model='plane', y=-8, scale=100, texture='white_cube', texture_scale=(64,64))
@@ -71,6 +68,11 @@ class JawMinigame(Entity):
             on_click=Func(setattr, self, 'tool', tool)
             )
 
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
     @property
     def tool(self):
         return self._tool
@@ -84,6 +86,9 @@ class JawMinigame(Entity):
         # print('set tool:', value)
         self.cursor.texture = value
         self.cursor.text_entity.text = value
+        if self.started and not self.out_of_time:
+            Audio('placetooth', pitch=.5)
+
 
     @property
     def earnings(self):
@@ -176,6 +181,7 @@ class JawMinigame(Entity):
         # print(self.tool, tooth_slot)
         if self.tool == 'hammer' and tooth_slot.nail.enabled:
             tooth_slot.nail.enabled = False
+            Audio('nail', pitch=random.uniform(.8,1.1), volume=random.uniform(.8,1))
 
         if self.tool == 'place_tooth' and not tooth_slot.nail.enabled:
             tooth_slot.tooth.enabled = True
@@ -236,7 +242,7 @@ class JawMinigame(Entity):
 
         if self.time <= 0:
             if not self.out_of_time:
-                self.stop()
+                self.enabled = False
 
             self.out_of_time = True
             return
@@ -253,8 +259,16 @@ class JawMinigame(Entity):
         self.time = max(0, self.time)
         self.timer.text = ("%1f" % self.time)[:5]
 
+    #
+    def on_enable(self):
 
-    def start(self):
+        # print('-----------')
+        # invoke(setattr, self.ui, 'enabled', True, delay=1)
+        # invoke(setattr, self.cursor, 'enabled', True, delay=2)
+        # self.jaw.animate_x(0, duration=1, delay=1)
+        # invoke(setattr, self, 'started', True, delay=2)
+        # invoke(self.music.play, delay=2.1)
+        # print('-----------')
         print('start')
         self.jaw.x = 20
         self.jaw.animate_x(0, duration=1)
@@ -265,28 +279,34 @@ class JawMinigame(Entity):
         self.earnings = 0
         invoke(setattr, self.ui, 'enabled', True, delay=0)
         invoke(setattr, self.cursor, 'enabled', True, delay=1)
-        invoke(self.music.play, delay=1)
         invoke(setattr, self, 'started', True, delay=1)
+        # self.music.fade_out(duration=0, delay=0)
+        invoke(self.music.play, delay=1)
+        # invoke(self.animate_background_color, delay=1.01)
 
-
-    def stop(self, go_to_next_scene=True):
+    def on_disable(self):
+        # self.ui.enabled=False
+    # def stop(self):
         self.cursor.enabled = False
         self.ui.enabled=False
 
-        if self.next_scene:
-            camera.overlay.fade_in(delay=1, duration=1)
-            invoke(setattr, self, 'enabled', False, delay=2)
-            invoke(setattr, self.next_scene, 'enabled', True, delay=2)
-            camera.overlay.fade_out(delay=2.1, duration=1)
-            self.music.fade_out(duration=1, destroy_on_ended=False)
+        if self.parent:
+            self.parent.go_to_scene(self.parent.scene_0)
+        # self.music.fade_out(duration=1, destroy_on_ended=False)
 
+        # if self.next_scene:
+        # camera.overlay.fade_in(delay=1, duration=1)
+        # invoke(setattr, self, 'enabled', False, delay=2)
+        # invoke(setattr, self.next_scene, 'enabled', True, delay=2)
+        # camera.overlay.fade_out(delay=2.1, duration=1)
+    #
 
 
     def animate_background_color(self):
         # self.bg.color=color.random_color().tint(-.5)
         step = 1/150*128
-        if self.started:
-            self.bg.animate_color(color.random_color().tint(-.25), curve=curve.linear, duration=step)
+        if self.started and not self.out_of_time:
+            self.bg.animate_color(color.random_color().tint(-.25), curve=curve.linear, duration=.1)
             invoke(self.animate_background_color, delay=step)
 
 
@@ -298,10 +318,7 @@ if __name__ == '__main__':
     Text.default_font = 'monogram_extended.ttf'
     Text.size *= 2
 
-    jaw_game = JawMinigame()
-    # jaw_game.enabled = False
-    jaw_game.stop()
-    jaw_game.start()
+    jaw_game = JawMinigame(enabled=False)
 
     def input(key):
         if key == 'space':
