@@ -2,16 +2,20 @@ from ursina import *
 from ursina.prefabs.health_bar import HealthBar
 
 class Enemy(Entity):
-    def __init__(self, **kwargs):
+    def __init__(self, boss=False, **kwargs):
         super().__init__(
                     model='quad',
                     color=color.red.tint(random.random() / 2),
                     scale_y=2,
                     z=-5);
-        self.max_hp = 10
-        self.hp = self.max_hp
         self.speed = 1
         self.attack_power = 1
+        self.max_hp = 10
+        if (boss):
+            self.max_hp = 20
+            attack_power = 2
+
+        self.hp = self.max_hp
         self.time_between_attacks = 3
         self.time_of_last_attack = 0
 

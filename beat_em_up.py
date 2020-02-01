@@ -74,11 +74,13 @@ class BeatEmUp(Entity):
         self.enemies = []
         self.spawn_random_enemies(3)
         if(self.current_street == 3):
-            self.boss = Enemy(
+            self.enemies.append(Enemy(
                 x = random.randint(-10, 10),
                 y = random.randint(-3, 2),
-                hp = 20,
-                parent = self)
+                boss=True,
+                parent = self))
+        # if(self.current_street == 4):
+        #     #end this shit
 
 
 
