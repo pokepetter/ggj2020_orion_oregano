@@ -18,6 +18,9 @@ class Player(Entity):
         self.kick_power = 5
         self.speed = 10
 
+        self.time_of_last_attack = 0
+        self.time_between_attacks = 0.5
+
         self.healthBar = HealthBar(
             position = (Vec3(-0.6, -0.3, 0)),
             scale_x = 0.8,
@@ -52,6 +55,13 @@ class Player(Entity):
 
     def on_disable(self):
         self.healthBar.enabled = False
+
+    def attack(self):
+        if time.time() < self.time_of_last_attack + self.time_between_attacks:
+            return 0
+        else:
+            self.time_of_last_attack = time.time()
+            return self.punch_power
 
 
 

@@ -28,7 +28,7 @@ class DialogueBox(Entity):
 
         self.image = Entity(
             model='quad',
-            texture='Sabrina',
+            texture='portrait_Sabrina',
             parent=self,
             x = -0.35,
             scale_y = 0.5
