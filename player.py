@@ -15,11 +15,12 @@ class Player(Entity):
 
         self.hp = 32 #number of teeth
         self.punch_power = 3
-        self.kick_power = 5
+        self.kick_power = 7
         self.speed = 10
 
         self.time_of_last_attack = 0
         self.time_between_attacks = 0.5
+        self.extra_kick_cooldown = 0.5 #this is added to time_between_attacks
 
         self.healthBar = HealthBar(
             position = (Vec3(-0.6, -0.3, 0)),
@@ -56,12 +57,19 @@ class Player(Entity):
     def on_disable(self):
         self.healthBar.enabled = False
 
-    def attack(self):
+    def punch(self):
         if time.time() < self.time_of_last_attack + self.time_between_attacks:
             return 0
         else:
             self.time_of_last_attack = time.time()
             return self.punch_power
+
+    def kick(self):
+        if time.time() < self.time_of_last_attack + self.time_between_attacks:
+            return 0
+        else:
+            self.time_of_last_attack = time.time() + self.extra_kick_cooldown
+            return self.kick_power
 
 
 
