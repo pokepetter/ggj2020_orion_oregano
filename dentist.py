@@ -20,7 +20,6 @@ class JawMinigame(Entity):
             color=color.lime.tint(-.35),
             # texture_scale=(64,32)
             )
-        self.bg.texture.filtering = None
         self.music = Audio('dentist', parent=self, repeat=True, autoplay=False)
         # self.music.volume = 1
         # self.floor = Entity(parent=self, model='plane', y=-8, scale=100, texture='white_cube', texture_scale=(64,64))
@@ -122,7 +121,6 @@ class JawMinigame(Entity):
             y=-2.7,
             z=-.2
             )
-        jaw_model.texture.filtering = False
         jaw.teeth = list()
 
         tooth_positions = [
