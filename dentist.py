@@ -47,7 +47,8 @@ class JawMinigame(Entity):
         self.finished_jaw.enabled = False
 
         mouse.visible = False
-        self.cursor = Cursor(parent=self.ui, scale=.1)
+        self.cursor = Cursor(parent=self.ui, scale=.1, origin=(-.5,.5))
+        self.arrow = Entity(parent=self.cursor, model='quad', texture='cursor', origin=(-.5,.5))
         # self.cursor.text_entity = Text(parent=self.cursor, text='tool_name', world_scale=25, y=1, z=-1)
 
         self.time = 30
