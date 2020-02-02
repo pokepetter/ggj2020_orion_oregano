@@ -75,6 +75,7 @@ class BeatEmUp(Entity):
             self.enemies.append(Enemy(
                 x = random.randint(-10, 10),
                 y = random.randint(-3, 2),
+                woman = (random.random() > 0.7),
                 parent = self))
 
 

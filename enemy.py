@@ -3,7 +3,7 @@ from ursina.prefabs.health_bar import HealthBar
 Texture.default_filtering = None
 
 class Enemy(Entity):
-    def __init__(self, boss=False, **kwargs):
+    def __init__(self, boss=False, woman=False, **kwargs):
         super().__init__(
                     # model='quad',
                     # texture='jonas_idle',
@@ -14,12 +14,16 @@ class Enemy(Entity):
         self.max_hp = 10
         self.time_between_attacks = 2
         self.time_of_last_attack = 0
+
         if not boss:
+            self.name = "jonas_"
+            if (woman):
+                self.name = "Dame Lilla_"
             self.animator = Animator(
                 animations = {
-                    'idle' : Animation('jonas_idle', parent=self, scale=1.5, z=-.1),
-                    'walk' : Animation('jonas_walk', parent=self, scale=1.5),
-                    'attack' : Animation('jonas_punch', fps=1, parent=self, scale=1.5),
+                    'idle' : Animation(self.name + 'idle', parent=self, scale=1.5, z=-.1),
+                    'walk' : Animation(self.name + 'walk', parent=self, scale=1.5),
+                    'attack' : Animation(self.name + 'punch', fps=1, parent=self, scale=1.5),
                 }
             )
             self.animator.state = 'idle'
