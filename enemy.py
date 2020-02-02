@@ -77,7 +77,9 @@ class Enemy(Entity):
 
 if __name__ == '__main__':
   app = Ursina()
+  t = time.time()
   enemy = Enemy()
+  print('---', time.time() - t)
 
   def input(key):
       if key == '1':

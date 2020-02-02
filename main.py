@@ -7,9 +7,13 @@ class DirtyDentist(Entity):
     def __init__(self):
         super().__init__(self)
         self.scene = None
-        self.beat_em_up_scene = BeatEmUp(parent=self, enabled=False)
+        t = time.time()
+        self.beat_em_up_scene = None
+        print('beat_em_up_scene load time:', time.time()-t)
         self.dentist_scene = JawMinigame(parent=self, enabled=False)
+        t = time.time()
         self.go_to_scene(self.beat_em_up_scene)
+        print('dentist_scene load time:', time.time()-t)
 
 
     def go_to_scene(self, value):
@@ -43,10 +47,14 @@ class DirtyDentist(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    window.color = color._32
+    # texture_importer.textureless = True
+    # window.show_ursina_splash = True
     Text.default_resolution *= 4
     Text.default_font = 'monogram_extended.ttf'
     Text.size *= 2
-
+    t = time.time()
     DirtyDentist()
+    print('---', time.time()-t)
+    window.color = color.black
+
     app.run()
