@@ -153,7 +153,7 @@ class BeatEmUp(Entity):
         if not self.dialogue and key == "space":
             for enemy in self.enemies:
                 if distance2d(self.player.position, enemy.position) < 1:
-                    enemy.hp = enemy.hp - self.player.punch_power
+                    enemy.hp = enemy.hp - self.player.attack()
                     enemy.next_walking_frame()
                     if(enemy.hp <= 0):
                         self.enemies.remove(enemy)
