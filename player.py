@@ -25,7 +25,8 @@ class Player(Entity):
                 'idle' : Animation('Tannlege idle', parent=self, scale=1.5, z=-.1, double_sided = True),
                 'walk' : Animation('Tannlege run', parent=self, scale=1.5, double_sided = True),
                 'punch' : Animation('Tannlege stillehit', parent=self, scale=1.5, double_sided = True),
-                'kick' : Animation('Tannlege kick', parent=self, scale=1.5, double_sided = True)
+                'kick' : Animation('Tannlege kick', parent=self, scale=1.5, double_sided = True),
+                'reveal' : Animation('reveal', loop=True, fps=6, parent=self, scale=1.5, double_sided = True),
             }
         )
         self.animator.state = 'idle'
@@ -87,7 +88,7 @@ class Player(Entity):
             return self.kick_power
 
     def update(self):
-        if self.animator.state == "punch" or self.animator.state == "kick":
+        if self.animator.state == "punch" or self.animator.state == "kick" or self.animator.state == "reveal":
             return
         if held_keys["w"] or held_keys["a"] or held_keys["s"] or held_keys["d"]:
             self.animator.state = "walk"

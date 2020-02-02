@@ -103,7 +103,8 @@ class BeatEmUp(Entity):
         for enemy in self.enemies:
             destroy(enemy)
         self.enemies = []
-        self.spawn_random_enemies(3)
+        if (self.current_street != 4):
+            self.spawn_random_enemies(3)
         if(self.current_street == 2):
             self.background.texture = "background2"
             self.second_street_dialogue()
@@ -115,7 +116,13 @@ class BeatEmUp(Entity):
                 parent = self))
             self.third_street_dialogue()
         if(self.current_street == 4):
-            self.end()
+            self.background.color = color.black
+            self.player.scale = 7
+            self.player.x = 0
+            self.player.y = 0
+            self.dialogue = "something"
+            self.player.animator.state = "reveal"
+            invoke(self.end, delay=10)
 
 
 
