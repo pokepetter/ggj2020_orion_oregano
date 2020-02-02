@@ -30,6 +30,15 @@ class JawMinigame(Entity):
         self.tooth_slot_model = Entity(parent=self, model=Cylinder(height=.2), enabled=False)
         self.tooth_model = Entity(parent=self, model=Prismatoid(base_shape=Quad(), thicknesses=[(1,1), (.7,.7)]), enabled=False)
         self.jaw_model = Entity(parent=self, model='gum', enabled=False)
+        self.nail_model = Entity(
+            parent=self,
+            model=Prismatoid(
+                base_shape=Circle(10),
+                path=(Vec3(0,0,0), Vec3(0,.9+.5,0), Vec3(0,.91+.5,0), Vec3(0,1+.5,0)),
+                thicknesses=(.2,.2,1,1),
+                ),
+            enabled=False
+            )
 
         self.jaw = self.generate_jaw()
         self.jaw.x = 20
@@ -39,8 +48,8 @@ class JawMinigame(Entity):
         self.finished_jaw.enabled = False
 
         mouse.visible = False
-        self.cursor = Cursor(parent=self.ui, scale=.025)
-        self.cursor.text_entity = Text(parent=self.cursor, text='tool_name', world_scale=25, y=1, z=-1)
+        self.cursor = Cursor(parent=self.ui, scale=.1)
+        # self.cursor.text_entity = Text(parent=self.cursor, text='tool_name', world_scale=25, y=1, z=-1)
 
         self.time = 30
         self.timer = Text(parent=self.ui, text='60.00', origin=(0,.5), y=.5, scale=2)
@@ -61,7 +70,8 @@ class JawMinigame(Entity):
         for i, tool in enumerate(self.tools):
             b = Button(
             parent=self.tools_menu,
-            text=tool,
+            # text=tool,
+            texture=tool,
             y=-i,
             scale=.9,
             color=color.light_gray,
@@ -85,7 +95,7 @@ class JawMinigame(Entity):
 
         # print('set tool:', value)
         self.cursor.texture = value
-        self.cursor.text_entity.text = value
+        # self.cursor.text_entity.text = value
         if self.started and not self.out_of_time:
             Audio('placetooth', pitch=.5)
 
@@ -149,9 +159,10 @@ class JawMinigame(Entity):
 
             tooth_slot.nail = Entity(
                 parent=tooth_slot,
-                model='cube',
-                origin_y=-1,
-                scale=(.1,1,.1),
+                # model='cube',
+                model=copy(self.nail_model.model),
+                origin_y=-.5,
+                world_scale=.75,
                 color=color.dark_gray,
                 enabled=False,
                 rotation_x=random.uniform(-1,1)*5,
@@ -304,6 +315,8 @@ if __name__ == '__main__':
     Text.default_resolution *= 4
     Text.default_font = 'monogram_extended.ttf'
     Text.size *= 2
+    Texture.default_filtering = None
+
 
     jaw_game = JawMinigame(enabled=False)
 
