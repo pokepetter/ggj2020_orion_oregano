@@ -16,9 +16,9 @@ class Enemy(Entity):
         self.time_of_last_attack = 0
         self.animator = Animator(
             animations = {
-                'idle' : Animation('jonas_idle', parent=self),
-                'walk' : Animation('jonas_walk', parent=self),
-                'attack' : Animation('jonas_punch', fps=1, parent=self),
+                'idle' : Animation('jonas_idle', parent=self, scale=1.5, z=-.1),
+                'walk' : Animation('jonas_walk', parent=self, scale=1.5),
+                'attack' : Animation('jonas_punch', fps=1, parent=self, scale=1.5),
             }
         )
         self.animator.state = 'idle'
