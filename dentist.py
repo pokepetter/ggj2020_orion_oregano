@@ -20,11 +20,6 @@ class JawMinigame(Entity):
             color=color.lime.tint(-.35),
             # texture_scale=(64,32)
             )
-        self.music = Audio('dentist', parent=self, repeat=True, autoplay=False)
-        # self.music.volume = 1
-        # self.floor = Entity(parent=self, model='plane', y=-8, scale=100, texture='white_cube', texture_scale=(64,64))
-        # self.bg = Entity(model='quad', z=100, scale=1000, color=color.black)
-        # self.bg.look_at(camera, 'back')
 
         self.tooth_slot_model = Entity(parent=self, model=Cylinder(height=.2), enabled=False)
         self.tooth_model = Entity(parent=self, model=Prismatoid(base_shape=Quad(), thicknesses=[(1,1), (.7,.7)]), enabled=False)
@@ -284,7 +279,7 @@ class JawMinigame(Entity):
         invoke(setattr, self.ui, 'enabled', True, delay=0)
         invoke(setattr, self.cursor, 'enabled', True, delay=1)
         invoke(setattr, self, 'started', True, delay=1)
-        invoke(self.music.play, delay=1)
+        invoke(self.animate_background_color, delay=1)
 
 
     def on_disable(self):
