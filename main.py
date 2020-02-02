@@ -15,8 +15,8 @@ class DirtyDentist(Entity):
 
         # self.go_to_scene(self.beat_em_up_scene)
         # invoke(self.go_to_scene, self.beat_em_up_scene)
-        self.start_screen = Entity(parent=camera.ui, model='quad', texture='brick', scale_x=camera.aspect_ratio)
-        Text(world_parent=self.start_screen, text='press start', y=-.25)
+        self.start_screen = Entity(parent=camera.ui, model='quad', texture='main_menu_bg', scale_x=camera.aspect_ratio)
+        Text(world_parent=self.start_screen, text='[press start]', origin=(0,0), y=-.45, color=color.black)
 
 
     def go_to_scene(self, value):
@@ -49,12 +49,6 @@ class DirtyDentist(Entity):
 
 
     def input(self, key):
-        if key == '1':
-            self.go_to_scene(self.beat_em_up_scene)
-        if key == '2':
-            self.go_to_scene(self.dentist_scene)
-        if key == 'f7':
-            self.scene.end()
 
         if key == 'space':
             self.start_screen.enabled = False
@@ -68,12 +62,20 @@ if __name__ == '__main__':
     # texture_importer.textureless = True
     window.show_ursina_splash = True
     window.exit_button.visible = False
+    window.fps_counter.enabled = False
     Text.default_resolution *= 4
     Text.default_font = 'monogram_extended.ttf'
     Text.size *= 2
     t = time.time()
-    DirtyDentist()
+    game = DirtyDentist()
     print('---', time.time()-t)
     window.color = color.black
 
+    def input(key):
+        if key == '1':
+            game.go_to_scene(game.beat_em_up_scene)
+        if key == '2':
+            game.go_to_scene(game.dentist_scene)
+        if key == 'f7':
+            game.scene.end()
     app.run()

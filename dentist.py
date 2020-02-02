@@ -279,7 +279,7 @@ class JawMinigame(Entity):
         invoke(setattr, self.ui, 'enabled', True, delay=0)
         invoke(setattr, self.cursor, 'enabled', True, delay=1)
         invoke(setattr, self, 'started', True, delay=1)
-        invoke(self.animate_background_color, delay=1)
+        self.background_animator = invoke(self.animate_background_color, delay=1)
 
 
     def on_disable(self):
@@ -299,7 +299,7 @@ class JawMinigame(Entity):
         step = 1/150*128
         if self.started and not self.out_of_time:
             self.bg.animate_color(color.random_color().tint(-.25), curve=curve.linear, duration=.1)
-            invoke(self.animate_background_color, delay=step)
+            self.background_animator = invoke(self.animate_background_color, delay=step)
 
 
 if __name__ == '__main__':
