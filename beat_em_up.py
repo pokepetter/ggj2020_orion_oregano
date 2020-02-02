@@ -18,18 +18,16 @@ class BeatEmUp(Entity):
         self.enemies = []
 
 
-        self.asphalt = Entity(
-            model = 'quad',
-            color = color.light_gray.tint(-.4),
-            z = 0,
-            y = 3,
-            origin_y = .5,
-            scale = (1000, 8, 10),
-            collider = 'box',
-            ignore = True,
-            parent = self
-            )
-
+        self.background = Entity(
+        model = 'quad',
+        texture = 'background1',
+        position = (0, 11, 0),
+        scale = (36, 17, 1),
+        origin_y = .5,
+        collider = 'box',
+        ignore = True,
+        parent = self
+        )
         self.below_ground = Entity(
             model = 'quad',
             color = color.olive.tint(-.4),
@@ -107,6 +105,7 @@ class BeatEmUp(Entity):
         self.enemies = []
         self.spawn_random_enemies(3)
         if(self.current_street == 2):
+            self.background.texture = "background2"
             self.second_street_dialogue()
         if(self.current_street == 3):
             self.enemies.append(Enemy(
