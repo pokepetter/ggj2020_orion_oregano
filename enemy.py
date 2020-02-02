@@ -14,24 +14,26 @@ class Enemy(Entity):
         self.max_hp = 10
         self.time_between_attacks = 3
         self.time_of_last_attack = 0
-        self.animator = Animator(
-            animations = {
-                'idle' : Animation('jonas_idle', parent=self, scale=1.5, z=-.1),
-                'walk' : Animation('jonas_walk', parent=self, scale=1.5),
-                'attack' : Animation('jonas_punch', fps=1, parent=self, scale=1.5),
-            }
-        )
-        self.animator.state = 'idle'
-
-        self.current_walking_frame = 0
-        self.time_between_walking_frames = 0.1
-
-        self.angry = False #should be set to true when chasing the player
+        if not boss:
+            self.animator = Animator(
+                animations = {
+                    'idle' : Animation('jonas_idle', parent=self, scale=1.5, z=-.1),
+                    'walk' : Animation('jonas_walk', parent=self, scale=1.5),
+                    'attack' : Animation('jonas_punch', fps=1, parent=self, scale=1.5),
+                }
+            )
+            self.animator.state = 'idle'
 
         if boss:
             self.max_hp = 20
             attack_power = 3
             self.time_between_attacks = 2
+            self.animator = Animator(
+                animations = {
+                    'walk' : Animation('GDB walk', parent=self, scale=1.5),
+                    'attack' : Animation('GDBoss hit', fps=1, parent=self, scale=1.5),
+                }
+            )
 
         self.hp = self.max_hp
         if boss:
@@ -68,11 +70,9 @@ class Enemy(Entity):
             return 0
         else:
             self.time_of_last_attack = time.time()
+            self.animator.state = 'attack'
+            invoke(setattr, self.animator, 'state', 'walk', delay=.1)
             return self.attack_power
-
-        self.animator.state = 'attack'
-        invoke(setattr, self.animator, 'state', 'walk', delay=.1)
-
 
 
 
