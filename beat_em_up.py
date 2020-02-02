@@ -12,6 +12,8 @@ class BeatEmUp(Entity):
         self.player_top_constraint = 3
         self.player_bottom_constraint = -5
 
+        self.hitbox_size = 3 # how far away the enemies have to be for a hit
+
         self.current_street = 1
         self.last_street = 3
 
@@ -158,7 +160,7 @@ class BeatEmUp(Entity):
 
         if not self.dialogue and key == "space":
             for enemy in self.enemies:
-                if distance2d(self.player.position, enemy.position) < 1:
+                if distance2d(self.player.position, enemy.position) < self.hitbox_size:
                     enemy.hp = enemy.hp - self.player.punch()
                     enemy.animator.state = 'walk'
                     if enemy.hp <= 0:
@@ -167,7 +169,7 @@ class BeatEmUp(Entity):
 
         if not self.dialogue and key == "k":
             for enemy in self.enemies:
-                if distance2d(self.player.position, enemy.position) < 1:
+                if distance2d(self.player.position, enemy.position) < self.hitbox_size:
                     enemy.hp = enemy.hp - self.player.kick()
                     enemy.animator.state = 'walk'
                     if enemy.hp <= 0:

@@ -10,9 +10,9 @@ class Enemy(Entity):
                     scale=4,
                     z=-5);
         self.speed = 1
-        self.attack_power = 1
+        self.attack_power = 2
         self.max_hp = 10
-        self.time_between_attacks = 3
+        self.time_between_attacks = 2
         self.time_of_last_attack = 0
         if not boss:
             self.animator = Animator(
@@ -26,8 +26,8 @@ class Enemy(Entity):
 
         if boss:
             self.max_hp = 20
-            attack_power = 3
-            self.time_between_attacks = 2
+            self.attack_power = 6
+            self.time_between_attacks = 1
             self.animator = Animator(
                 animations = {
                     'walk' : Animation('GDB walk', parent=self, scale=1.5),

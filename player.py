@@ -57,6 +57,8 @@ class Player(Entity):
             self.animator.animations[self.animator.state].blink(color.red)
 
         self._hp = value
+        if(value <= 0):
+            self.parent.end()
 
 
     def on_enable(self):
