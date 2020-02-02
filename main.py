@@ -60,6 +60,7 @@ class DirtyDentist(Entity):
 if __name__ == '__main__':
     app = Ursina()
     # texture_importer.textureless = True
+    window.fullscreen = True
     window.show_ursina_splash = True
     window.exit_button.visible = False
     window.fps_counter.enabled = False
