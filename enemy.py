@@ -7,7 +7,7 @@ class Enemy(Entity):
         super().__init__(
                     # model='quad',
                     # texture='jonas_idle',
-                    scale_y=2,
+                    scale=4,
                     z=-5);
         self.speed = 1
         self.attack_power = 1
@@ -40,12 +40,12 @@ class Enemy(Entity):
 
         self.healthBar = HealthBar(
             world_parent = self,
-            position = (Vec3(-1, 1, 0)),
-            scale_x = 2,
+            position = (Vec3(-.2, 1, 0)),
+            scale_x = .5,
             max_value = self.hp,
             show_text = False,
             show_lines = False,
-            roundness = 0.5
+            roundness = 0.25
             )
 
 
@@ -60,6 +60,7 @@ class Enemy(Entity):
     def hp(self, value):
         self._hp = value
         self.healthBar.value = value
+        self.animator.animations['walk'].blink(color.red)
 
 
     def attack(self):
@@ -80,7 +81,7 @@ if __name__ == '__main__':
   t = time.time()
   enemy = Enemy()
   print('---', time.time() - t)
-
+  camera.fov = 100
   def input(key):
       if key == '1':
           enemy.animator.state = 'idle'

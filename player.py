@@ -5,7 +5,7 @@ from ursina.prefabs.health_bar import HealthBar
 class Player(Entity):
     def __init__(self, **kwargs):
         super().__init__(
-            scale_y=2,
+            scale=4,
             x = -15,
             z=-6,
             **kwargs
@@ -93,14 +93,13 @@ class Player(Entity):
 
     def input(self, key):
         if key == "a":
-            self.scale_x = -1
+            self.scale_x = self.scale_y*-1
         if key == "d":
-            self.scale_x = 1
+            self.scale_x = self.scale_y
 
 
 
 if __name__ == '__main__':
   app = Ursina()
-  enemy = Player(enabled=False)
-  enemy.enabled = False
+  enemy = Player(enabled=True)
   app.run()
