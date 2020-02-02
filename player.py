@@ -5,21 +5,30 @@ from ursina.prefabs.health_bar import HealthBar
 class Player(Entity):
     def __init__(self, **kwargs):
         super().__init__(
-            model='quad',
-            color=color.yellow,
             scale_y=2,
             x = -15,
-            z=-5,
+            z=-6,
             **kwargs
             )
 
         self.hp = 32 #number of teeth
         self.punch_power = 3
-        self.kick_power = 5
+        self.kick_power = 7
         self.speed = 10
 
         self.time_of_last_attack = 0
         self.time_between_attacks = 0.5
+        self.extra_kick_cooldown = 0.1 #this is added to time_between_attacks
+
+        self.animator = Animator(
+            animations = {
+                'idle' : Animation('Tannlege idle', parent=self, scale=1.5, z=-.1, double_sided = True),
+                'walk' : Animation('Tannlege run', parent=self, scale=1.5, double_sided = True),
+                'punch' : Animation('Tannlege stillehit', parent=self, scale=1.5, double_sided = True),
+                'kick' : Animation('Tannlege kick', parent=self, scale=1.5, double_sided = True)
+            }
+        )
+        self.animator.state = 'idle'
 
         self.healthBar = HealthBar(
             position = (Vec3(-0.6, -0.3, 0)),
@@ -56,12 +65,37 @@ class Player(Entity):
     def on_disable(self):
         self.healthBar.enabled = False
 
-    def attack(self):
+    def punch(self):
         if time.time() < self.time_of_last_attack + self.time_between_attacks:
             return 0
         else:
             self.time_of_last_attack = time.time()
+            self.animator.state = 'punch'
+            invoke(setattr, self.animator, "state", "idle", delay = self.time_between_attacks)
             return self.punch_power
+
+    def kick(self):
+        if time.time() < self.time_of_last_attack + self.time_between_attacks:
+            return 0
+        else:
+            self.time_of_last_attack = time.time() + self.extra_kick_cooldown
+            self.animator.state = 'kick'
+            invoke(setattr, self.animator, "state", "idle", delay = 7/12)
+            return self.kick_power
+
+    def update(self):
+        if self.animator.state == "punch" or self.animator.state == "kick":
+            return
+        if held_keys["w"] or held_keys["a"] or held_keys["s"] or held_keys["d"]:
+            self.animator.state = "walk"
+        else:
+            self.animator.state = "idle"
+
+    def input(self, key):
+        if key == "a":
+            self.scale_x = -1
+        if key == "d":
+            self.scale_x = 1
 
 
 
