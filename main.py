@@ -13,12 +13,15 @@ class DirtyDentist(Entity):
         self.street_music = Audio('street', loop=True, autoplay=False)
         self.dentist_music = Audio('dentist', loop=True, autoplay=False)
 
-        self.go_to_scene(self.beat_em_up_scene)
+        # self.go_to_scene(self.beat_em_up_scene)
+        # invoke(self.go_to_scene, self.beat_em_up_scene)
+        self.start_screen = Entity(parent=camera.ui, model='quad', texture='brick', scale_x=camera.aspect_ratio)
+        Text(world_parent=self.start_screen, text='press start', y=-.25)
 
 
     def go_to_scene(self, value):
         print('go to scene:', value)
-        camera.overlay.fade_in(duration=1)
+        camera.overlay.color = color.black
         if value == self.beat_em_up_scene:
             destroy(self.beat_em_up_scene, delay=1)
             camera.fov = 20
@@ -40,8 +43,9 @@ class DirtyDentist(Entity):
             self.scene = self.dentist_scene
 
         invoke(setattr, self.scene, 'enabled', True, delay=1.1)
-        camera.overlay.fade_out(duration=1, delay=1.2)
-
+        # camera.overlay.fade_out(duration=1, delay=1.2)
+        # camera.overlay.color = color.clear
+        invoke(setattr, camera.overlay, 'color', color.clear, delay=1)
 
 
     def input(self, key):
@@ -52,12 +56,18 @@ class DirtyDentist(Entity):
         if key == 'f7':
             self.scene.end()
 
+        if key == 'space':
+            self.start_screen.enabled = False
+            self.ignore = True
+            self.go_to_scene(self.beat_em_up_scene)
+
 
 
 if __name__ == '__main__':
     app = Ursina()
     # texture_importer.textureless = True
-    # window.show_ursina_splash = True
+    window.show_ursina_splash = True
+    window.exit_button.visible = False
     Text.default_resolution *= 4
     Text.default_font = 'monogram_extended.ttf'
     Text.size *= 2

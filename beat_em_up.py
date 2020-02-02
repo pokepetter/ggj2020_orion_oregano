@@ -7,8 +7,6 @@ class BeatEmUp(Entity):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        window.color = color.light_gray
-
         self.player_top_constraint = 3
         self.player_bottom_constraint = -5
 
