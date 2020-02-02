@@ -9,6 +9,7 @@ class DirtyDentist(Entity):
         self.scene = None
         self.beat_em_up_scene = BeatEmUp(parent=self, enabled=False)
         self.dentist_scene = JawMinigame(parent=self, enabled=False)
+        self.go_to_scene(self.beat_em_up_scene)
 
 
     def go_to_scene(self, value):
@@ -37,9 +38,6 @@ class DirtyDentist(Entity):
             self.go_to_scene(self.beat_em_up_scene)
         if key == '2':
             self.go_to_scene(self.dentist_scene)
-
-        if key == 'f':
-            print(camera.fov, self.beat_em_up_scene.player.y, self.beat_em_up_scene.player_top_constraint)
 
 
 
