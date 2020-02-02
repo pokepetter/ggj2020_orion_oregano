@@ -32,8 +32,8 @@ class DirtyDentist(Entity):
             invoke(setattr, self.beat_em_up_scene, 'enabled', False, delay=1)
             self.scene = self.dentist_scene
 
-        invoke(setattr, self.scene, 'enabled', True, delay=1)
-        camera.overlay.fade_out(duration=1, delay=1.1)
+        invoke(setattr, self.scene, 'enabled', True, delay=1.1)
+        camera.overlay.fade_out(duration=1, delay=1.2)
 
 
 
@@ -42,6 +42,8 @@ class DirtyDentist(Entity):
             self.go_to_scene(self.beat_em_up_scene)
         if key == '2':
             self.go_to_scene(self.dentist_scene)
+        if key == 'f7':
+            self.scene.end()
 
 
 

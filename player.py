@@ -51,8 +51,11 @@ class Player(Entity):
 
     @hp.setter
     def hp(self, value):
+        if hasattr(self, '_hp') and value < self._hp:
+            self.healthBar.value = value
+            self.animator.animations[self.animator.state].blink(color.red)
+
         self._hp = value
-        self.healthBar.value = value
 
 
     def on_enable(self):
