@@ -45,11 +45,7 @@ class BeatEmUp(Entity):
         self.player = Player(parent=self)
 
         self.ui = Entity(parent=camera.ui)
-        self.dialogue = DialogueBox([
-                    ["Tooth criminal", "Omg"],
-                    ["Tooth criminal", "There are people here"],
-                    ["Tooth criminal", "I gotta..\nI gotta knock their <red>teeth <default>out!"]
-                ], parent=self.ui)
+        self.first_street_dialogue()
         self.dialogue.t.parent = self.ui
         self.dialogue.name_text.parent = self.ui
 
@@ -82,6 +78,25 @@ class BeatEmUp(Entity):
                 parent = self))
 
 
+    def first_street_dialogue(self):
+        self.dialogue = DialogueBox([
+                    ["Sabrina", "Omg"],
+                    ["Sabrina", "There are people here"],
+                    ["Sabrina", "I gotta..\nI gotta knock their <red>teeth <default>out!"]
+                ], parent=self.ui)
+
+    def second_street_dialogue(self):
+        self.dialogue = DialogueBox([
+                    ["Sabrina", "So many teeth, so little time"],
+                    ["Jonas", "you'll never get my teeth!"]
+                ], parent=self.ui)
+
+    def third_street_dialogue(self):
+        self.dialogue = DialogueBox([
+                    ["Margaret", "I'll crush you"],
+                    ["Sabrina", "no u won't"],
+                    ["Margaret", "Yes I will!!!"]
+                ], parent=camera.ui)
 
 
     def go_to_next_street(self):
@@ -91,19 +106,17 @@ class BeatEmUp(Entity):
             destroy(enemy)
         self.enemies = []
         self.spawn_random_enemies(3)
+        if(self.current_street == 2):
+            self.second_street_dialogue()
         if(self.current_street == 3):
             self.enemies.append(Enemy(
                 x = random.randint(-10, 10),
                 y = random.randint(-3, 2),
                 boss=True,
                 parent = self))
-            self.dialogue = DialogueBox([
-                        ["Margaret", "I'll crush you"],
-                        ["Tooth criminal", "no u won't"],
-                        ["Margaret", "Yes I will!!!"]
-                    ], parent=camera.ui)
-        # if(self.current_street == 4):
-        #     #end this shit
+            self.third_street_dialogue()
+        if(self.current_street == 4):
+            self.end()
 
 
 
@@ -141,9 +154,15 @@ class BeatEmUp(Entity):
             for enemy in self.enemies:
                 if distance2d(self.player.position, enemy.position) < 1:
                     enemy.hp = enemy.hp - self.player.punch_power
+                    enemy.next_walking_frame()
                     if(enemy.hp <= 0):
                         self.enemies.remove(enemy)
                         destroy(enemy)
+
+    def end(self):
+        if self.parent:
+            self.started = False
+            self.parent.go_to_scene(self.parent.dentist_scene)
 
 
 input_handler.bind('right arrow', 'd')

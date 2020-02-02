@@ -28,7 +28,7 @@ class DialogueBox(Entity):
 
         self.image = Entity(
             model='quad',
-            texture='Munn_1_lambert1_BaseColor',
+            texture='Sabrina',
             parent=self,
             x = -0.35,
             scale_y = 0.5
@@ -55,7 +55,7 @@ class DialogueBox(Entity):
             destroy(self.name_text)
             destroy(self)
         self.name_text.text = "<yellow>" + self.texts[value][0]
-        self.image.texture = "textures/" + self.texts[value][0]
+        self.image.texture = "textures/portrait_" + self.texts[value][0]
         self.t.text = self.texts[value][1]
         self.t.appear()
 
